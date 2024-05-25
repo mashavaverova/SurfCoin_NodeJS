@@ -7,7 +7,7 @@ const CHANNELS = {
 
 // redis server for broadcasting blockchain to clients 
 export default class RedisServer {
-  constructor() {
+  constructor({ blockchain }) {
     this.blockchain = blockchain;
     this.publisher = redis.createClient();
     this.subscriber = redis.createClient();
@@ -37,11 +37,11 @@ export default class RedisServer {
 
   //2. message handler for the redis server
   messageHandler(channel, message) {
-    const message = JSON.parse(message);
+    const parsedMessage = JSON.parse(message);
 
     if (channel === CHANNELS.BLOCKCHAIN) {
-      console.log('REPLACE IS IN PROGRESS', message);
-      this.blockchain.replaceChain(message);
+      console.log('REPLACE IS IN PROGRESS', parsedMessage);
+      this.blockchain.replaceChain(parsedMessage);
     }
   }
 

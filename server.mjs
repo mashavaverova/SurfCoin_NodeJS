@@ -7,7 +7,7 @@ import blockRouter from './routes/block-routes.mjs';
 //export blockchain to be used in other files in the project (controllers)
 export const blockchain = new Blockchain();
 //export redis server to be used in other files in the project (redis-server)
-export const redisServer = new RedisServer();
+export const redisServer = new RedisServer({ blockchain: blockchain });
 
 const app = express();
 app.use(express.json());
