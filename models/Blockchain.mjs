@@ -3,6 +3,9 @@ import { createHash } from '../utilities/crypto-lib.mjs';
 export default class Blockchain {
   constructor() {
     this.chain = [Block.genesis];
+    this.memberNodes = [];
+    this.nodeUrl = '';
+    
   }
   addBlock({ data }) {
     const newBlock = Block.mineBlock({
@@ -45,5 +48,19 @@ export default class Blockchain {
     }
 
     return true;
+  }
+
+  addNode(nodeUrl) {
+    if (nodeUrl && nodeUrl !== this.nodeUrl && !this.memberNodes.includes(nodeUrl)) {
+      this.memberNodes.push(nodeUrl);
+    }
+  }
+
+  removeNode(nodeUrl) {
+    this.memberNodes = this.memberNodes.filter(node => node !== nodeUrl);
+  }
+
+  getMemberNodes() {
+    return this.memberNodes;
   }
 }
