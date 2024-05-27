@@ -2,7 +2,7 @@
   "name": "surfcoin_nodejs",
   "version": "1.0.0",
   "description": "Utbildnings project",
-  "main": "index.js",
+  "main": "server.mjs",
   "scripts": {
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -10,12 +10,14 @@
     "dev-node": "cross-env GENERATE_NODE_PORT='true' nodemon server.mjs",
     "start-redis": "redis-server --daemonize yes"
   },
-  "author": "",
+  "author": "mariia_vaverova & natalya_lisjo",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "hex-to-binary": "^1.0.1",
-    "redis": "^4.6.14"
+    "redis": "^2.8.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@vitest/ui": "^1.6.0",
