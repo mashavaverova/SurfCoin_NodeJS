@@ -4,6 +4,7 @@ import RedisServer from './redis-server.mjs';
 import blockchainRouter from './routes/blockchain-routes.mjs';
 import blockRouter from './routes/block-routes.mjs';
 import memberRouter from './routes/member-routes.mjs';
+import transactionRoutes from './routes/transaction-route.mjs';
 
 //export blockchain to be used in other files in the project (controllers)
 export const blockchain = new Blockchain();
@@ -22,6 +23,7 @@ let NODE_PORT;
 app.use('/api/v1/block', blockRouter);
 app.use('/api/v1/blockchain', blockchainRouter);
 app.use('/api/v1/members', memberRouter);
+app.use('/api/v1/transactions', transactionRoutes);
 
 //2. flexible port number p.2
 if (process.env.GENERATE_NODE_PORT === 'true') {
