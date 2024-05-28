@@ -3,11 +3,13 @@ import { createHash } from '../utilities/crypto-lib.mjs';
 import hexToBinary from 'hex-to-binary';
 
 export default class Block {
-  constructor({ timestamp, lastHash, hash, data, difficulty, nonce }) {
+  constructor({ timestamp, blockIndex, lastHash, hash, data, transactions, difficulty, nonce }) {
     this.timestamp = timestamp;
+    this.blockIndex = blockIndex;
     this.lastHash = lastHash;
     this.hash = hash;
     this.data = data;
+    this.transactions = transactions;
     this.difficulty = difficulty;
     this.nonce = nonce;
   }
@@ -16,11 +18,12 @@ export default class Block {
     return new this(GENESIS_DATA);
   }
 
-  static mineBlock({ lastBlock, data }) {
+  static mineBlock({ lastBlock, data, transactions }) {
     let hash, timestamp;
     const lastHash = lastBlock.hash;
     let { difficulty } = lastBlock;
     let nonce = 0;
+    const blockIndex = lastBlock.blockIndex + 1
     do {
       nonce++;
       timestamp = Date.now();
@@ -28,16 +31,18 @@ export default class Block {
         block: lastBlock,
         timestamp,
       });
-      hash = createHash(timestamp, lastHash, data, difficulty, nonce);
+      hash = createHash(timestamp, lastHash, data, transactions, difficulty, nonce);
     } while (
       hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty)
     );
 
     return new this({
       timestamp,
+      blockIndex,
       lastHash,
       hash,
       data,
+      transactions,
       difficulty,
       nonce,
     });

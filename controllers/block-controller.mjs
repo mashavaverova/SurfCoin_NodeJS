@@ -1,7 +1,7 @@
 import { blockchain, redisServer } from '../server.mjs';
 
 export const mineBlock = (req, res, next) => {
-  const data = req.body;
+  const { data }  = req.body;
 
   const block = blockchain.addBlock({data:data});
 
