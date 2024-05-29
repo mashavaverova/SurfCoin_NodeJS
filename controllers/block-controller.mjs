@@ -8,7 +8,9 @@ export const mineBlock = (req, res, next) => {
   //add redis broadcasting
   redisServer.broadcast();
 
-  
+ // console.log ("its from controller", block)
+
+ 
   res.status(201).json({
     success: true,
     statusCode: 201,
@@ -17,4 +19,3 @@ export const mineBlock = (req, res, next) => {
 };
 
 
-//! add redis broadcasting

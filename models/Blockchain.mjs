@@ -12,7 +12,7 @@ export default class Blockchain {
   addBlock({ data }) {
     const newBlock = Block.mineBlock({
       lastBlock: this.chain.at(-1),
-      data: data,
+      data,
       transactions: this.pendingTransactions,
     });
 
