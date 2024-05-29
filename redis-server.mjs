@@ -3,6 +3,7 @@ import redis from 'redis';
 const CHANNELS = {
   TEST: 'TEST',
   BLOCKCHAIN: 'BLOCKCHAIN',
+  TRANSACTIONS: 'TRANSACTIONS'
 };
 
 // redis server for broadcasting blockchain to clients 
