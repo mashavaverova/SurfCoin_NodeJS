@@ -1,26 +1,29 @@
 import Block from '../models/Block.mjs';
 import { createHash } from '../utilities/crypto-lib.mjs';
-import Transaction from './Transaction.mjs';
+import Transaction from '../models/Transaction.mjs';
+import { redisServer } from  '../startup.mjs';
 export default class Blockchain {
   constructor() {
     this.chain = [Block.genesis];
-    this.memberNodes = [];
     this.pendingTransactions = [];
-    this.nodeUrl = '';
-    
+    this.memberNodes = [];
+
   }
-  addBlock({ data }) {
-    const newBlock = Block.mineBlock({
+  //instance method
+  addBlock({ timestamp, blockIndex, lastHash, hash, data, transactions, nonce, difficulty }) {
+    const block = Block.mineBlock({
       lastBlock: this.chain.at(-1),
-      data,
+      data: data,
       transactions: this.pendingTransactions,
     });
 
-    this.chain.push(newBlock);
     this.pendingTransactions = [];
-    return newBlock;
-  }
+    this.chain.push(block);
 
+    redisServer.broadcast(); 
+
+    return block;
+  }
 
   createTransaction(amount, sender, recipient) {
     return new Transaction(amount, sender, recipient);
@@ -35,46 +38,39 @@ export default class Blockchain {
     return this.chain.at(-1);
   }
 
-  addNode(nodeUrl) {
-    if (nodeUrl && nodeUrl !== this.nodeUrl && !this.memberNodes.includes(nodeUrl)) {
-      this.memberNodes.push(nodeUrl);
-    }
-  }
-
-  removeNode(nodeUrl) {
-    this.memberNodes = this.memberNodes.filter(node => node !== nodeUrl);
-  }
-
-  getMemberNodes() {
-    return this.memberNodes;
-  }
-
   replaceChain(chain) {
     if (chain.length <= this.chain.length) return;
+
     if (!Blockchain.validateChain(chain)) return;
+
     this.chain = chain;
   }
 
-
   static validateChain(chain) {
-    if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis)) {
+    // if (chain.at(0) !== Block.genesis) return false <-- not correct way!!!
+    // rule 1. have correct genesis block
+    if (JSON.stringify(chain.at(0)) !== JSON.stringify(Block.genesis))
       return false;
-    }
 
     for (let i = 1; i < chain.length; i++) {
-      const { timestamp, lastHash, hash, data, transactions, difficulty, nonce } = chain[i];
-      const actualLastHash = chain[i - 1].hash;
+      const { timestamp, lastHash, hash, data, nonce, difficulty } =
+        chain.at(i);
+      const currentLastHash = chain[i - 1].hash;
       const lastDifficulty = chain[i - 1].difficulty;
 
-      if (lastHash !== actualLastHash) return false;
+      //rule 2. lastHash should be correct for each block
+      if (lastHash !== currentLastHash) return false;
+
+      //defence against difficulty attack
       if (Math.abs(lastDifficulty - difficulty) > 1) return false;
+
+      //rule 3. check that block is valid
       const validHash = createHash(
         timestamp,
         lastHash,
         data,
-        transactions,
-        difficulty,
-        nonce
+        nonce,
+        difficulty
       );
       if (hash !== validHash) return false;
     }

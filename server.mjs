@@ -1,17 +1,16 @@
 import express from 'express';
-import Blockchain from './models/Blockchain.mjs';
-import RedisServer from './redis-server.mjs';
+
 import blockchainRouter from './routes/blockchain-routes.mjs';
 import blockRouter from './routes/block-routes.mjs';
 import memberRouter from './routes/member-routes.mjs';
 import transactionRoutes from './routes/transaction-route.mjs';
+import cors from 'cors';
+
 
 //export blockchain to be used in other files in the project (controllers)
-export const blockchain = new Blockchain();
-//export redis server to be used in other files in the project (redis-server)
-export const redisServer = new RedisServer({ blockchain: blockchain });
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 //1. flexible port number p.1

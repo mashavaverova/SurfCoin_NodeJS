@@ -1,29 +1,31 @@
 import { GENESIS_DATA, MINE_RATE } from '../config/settings.mjs';
 import { createHash } from '../utilities/crypto-lib.mjs';
 import hexToBinary from 'hex-to-binary';
-
 export default class Block {
-  constructor({ timestamp, blockIndex, lastHash, hash, data, transactions, difficulty, nonce }) {
+  constructor({ timestamp, blockIndex, lastHash, hash, data, transactions, nonce, difficulty }) {
     this.timestamp = timestamp;
     this.blockIndex = blockIndex;
     this.lastHash = lastHash;
     this.hash = hash;
     this.data = data;
     this.transactions = transactions;
-    this.difficulty = difficulty;
     this.nonce = nonce;
+    this.difficulty = difficulty;
   }
 
+  //getter. static method = can be called without creating an instance of the class
   static get genesis() {
     return new this(GENESIS_DATA);
   }
 
   static mineBlock({ lastBlock, data, transactions }) {
-    let hash, timestamp;
+    //const timestamp = Date.now();
     const lastHash = lastBlock.hash;
+    const blockIndex = lastBlock.blockIndex + 1;
     let { difficulty } = lastBlock;
+    let hash, timestamp;
     let nonce = 0;
-    const blockIndex = lastBlock.blockIndex + 1
+
     do {
       nonce++;
       timestamp = Date.now();
@@ -32,13 +34,11 @@ export default class Block {
         timestamp,
       });
       hash = createHash(timestamp, lastHash, data, transactions, difficulty, nonce);
-    } while (
-      hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty)
-    );
+    } while (hexToBinary(hash).substring(0, difficulty) !== '0'.repeat(difficulty));
 
     return new this({
       timestamp,
-      blockIndex,
+      blockIndex: lastBlock.blockIndex + 1,
       lastHash,
       hash,
       data,

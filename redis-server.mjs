@@ -10,6 +10,7 @@ const CHANNELS = {
 export default class RedisServer {
   constructor({ blockchain }) {
     this.blockchain = blockchain;
+    
     this.publisher = redis.createClient();
     this.subscriber = redis.createClient();
 
