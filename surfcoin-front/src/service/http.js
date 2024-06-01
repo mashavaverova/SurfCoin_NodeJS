@@ -30,7 +30,7 @@ export default class HttpClient  {
     }
 //metod post
 async add( obj) {   
-  console.log('block in add()', block);  
+  console.log('block in add()',obj);  
   try {
       const response = await fetch(this.#url , {
         //post metod--create packet
