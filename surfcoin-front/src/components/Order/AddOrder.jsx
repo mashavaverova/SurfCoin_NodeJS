@@ -1,5 +1,5 @@
 import { useState} from "react";
- 
+
  import BlockChain from "../../models/BlockchainClass";
  import Transaction from "../../models/Transaction";
  import HttpClient from "../../service/http";
@@ -7,37 +7,42 @@ import { useState} from "react";
 import Sender from "./Sender";
 import Recipient from "./Recipient";
 import Amount from "./Amount";
-  
+import Error from "../Tools/Error";  
 
  const Order = ({     createNewOrder }) => {
      const [amount, setAmount ] = useState({});
      const [sender, setSender] = useState({});
      const [recipient, setRecipient] = useState({});
-     const [blockchain, setBlockchain] = useState(new BlockChain());
-     const [transaction , setTransaction] = useState({  
-     }); 
+     const [error, setError] = useState(null)
+     const [transaction , setTransaction] = useState({  new : Transaction }); 
+ 
  
      const handleChangesDate = async () => {
-         const http = new HttpClient();
-         const res = await await http.get('api/v1/blockchain')
-         setBlockchain(res.data.chain)
+    //      const http = new HttpClient();
+    //      const res = await await http.get('api/v1/blockchain')
+    //      setBlockchain(res.data.chain)
      };
     
      const createOrder = async (e) => {
          e.preventDefault()
-         const lastBlock =  (blockchain[blockchain.length - 1] ) ;
+        
       //  create new object(transaction)
-         const newOrder = new Transaction(
-            amount,
+     const newOrder = new Transaction(
+            Number(amount),
             sender,
             recipient);  
           
-      //const check = newOrder.getValidation()        
-      //   if(check.validated) {
+    const check = newOrder.getValidation()        
+    if(check.validated) {
       console.log('newOrder', newOrder);
          saveTransaction(newOrder);
          setTransaction(newOrder);
-      //}
+        
+      }
+      else {
+        // alert(check.msg)
+        setError(check)
+      }
      };
      async function saveTransaction(obj) {
         const url = 'http://localhost:5001/api/v1/transactions/transaction';
@@ -46,17 +51,24 @@ import Amount from "./Amount";
         // redirect
         location.href = './blockchain'
       }
+      const toggleError = () => {
+        setError(null)
+      }
      return ( 
         <>
+          <div className=" order">  </div>
+         {error && <Error key={error.id} msgs={error.msg} toggle={toggleError} />}
          <form className = "formOrder col-12"
          onSubmit = {(e) => {
                  e.preventDefault();
                  createOrder();}} >
          <div className = "val"
          onChange = {handleChangesDate} >
-         <Amount updateAmount = {setAmount}/> 
+  
+         <Amount updateAmount = {setAmount }/> 
          <Sender updateSender = {setSender} />   
-         <Recipient updateRecipient = {setRecipient} />    
+         <Recipient updateRecipient = {setRecipient} />   
+
          </div> 
          <h1 > Information that you adding to transaction </h1> 
          <div className = "data-container" >
@@ -71,7 +83,7 @@ import Amount from "./Amount";
          onClick = {
              e => createOrder(e)
          } > Submit </button> </div> </form>
-
+        
          </>
      );
  };

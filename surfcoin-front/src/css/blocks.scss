@@ -50,4 +50,21 @@ input {
   border: solid 1px #6465d4;
   border-radius: 0.5rem;
 }
+
+
+
+.order{
+  width: 80%;
+  border: 2px solid rgb(110, 126, 15);
+  margin: 5px auto;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  bottom: auto;
+  right: 0;
+  left: 0;
+  background-color: rgb(41, 11, 75, 0.9);
+  border-radius: 0.5rem;
+  z-index: 2;
+  }
  

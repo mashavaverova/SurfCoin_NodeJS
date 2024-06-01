@@ -1,10 +1,10 @@
-// // import { createHash } from '../service/crypto-lib.js';
-// import Block from  './BlockClass.js';
+ 
+  import Block from  './BlockClass.js';
+  import { GENESIS_DATA, MINE_RATE } from '../utilities/settings.js';
 
+  
  export default class Blockchain {
     constructor() {
-      this.chain = [Block.genesis];
+      this.chain = [Block.GENESIS_DATA];
    }
-  
-    
   }

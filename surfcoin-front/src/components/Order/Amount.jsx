@@ -1,6 +1,6 @@
 function  Amount({ updateAmount }) {
   const handleChange = (e) => {
-    updateAmount(e.target.value);
+    updateAmount(+e.target.value);   
   };
 
   return (
