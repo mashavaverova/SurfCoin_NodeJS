@@ -2,6 +2,8 @@ import Block from '../models/Block.mjs';
 import { createHash } from '../utilities/crypto-lib.mjs';
 import Transaction from '../models/Transaction.mjs';
 import { redisServer } from  '../startup.mjs';
+
+import writeBlockchainToFile from '../utilities/fileHandler.mjs';
 export default class Blockchain {
   constructor() {
     this.chain = [Block.genesis];
@@ -10,7 +12,7 @@ export default class Blockchain {
 
   }
   //instance method
-  addBlock({ timestamp, blockIndex, lastHash, hash, data, transactions, nonce, difficulty }) {
+  addBlock( data ) {
     const block = Block.mineBlock({
       lastBlock: this.chain.at(-1),
       data: data,
@@ -20,13 +22,15 @@ export default class Blockchain {
     this.pendingTransactions = [];
     this.chain.push(block);
 
-    redisServer.broadcast(); 
+    redisServer.broadcastBlockchain(); 
 
     return block;
   }
 
-  createTransaction(amount, sender, recipient) {
-    return new Transaction(amount, sender, recipient);
+   createTransaction(amount, sender, recipient) {
+    const transaction = new Transaction(amount, sender, recipient);
+    this.pendingTransactions.push(transaction);
+    return transaction;
   }
 
   addTransaction(transaction) {
@@ -77,4 +81,6 @@ export default class Blockchain {
 
     return true;
   }
+
+
 }

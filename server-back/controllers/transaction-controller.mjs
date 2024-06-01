@@ -8,7 +8,7 @@ export const createTransaction = (req, res, next) => {
   res.status(201).json({
     success: true,
     statusCode: 201,
-    data: { message: 'Transaktion skapad', transaction, blockIndex },
+    data: { message: 'Transaction created', transaction, blockIndex },
   });
 };
 
@@ -35,7 +35,7 @@ export const broadcastTransaction = (req, res, next) => {
     success: true,
     statusCode: 201,
     data: {
-      message: 'Transaktion skapad och distribuerad',
+      message: 'Transaction created and broadcast successfully',
       transaction,
       blockIndex,
     },
