@@ -1,10 +1,12 @@
- import Data from "./Amount";
- import Block from "../../models/BlockClass";
+import { useState} from "react";
+ 
  import BlockChain from "../../models/BlockchainClass";
+ import Transaction from "../../models/Transaction";
  import HttpClient from "../../service/http";
- import { useState} from "react";
+
 import Sender from "./Sender";
 import Recipient from "./Recipient";
+import Amount from "./Amount";
   
 
  const Order = ({     createNewOrder }) => {
@@ -12,10 +14,9 @@ import Recipient from "./Recipient";
      const [sender, setSender] = useState({});
      const [recipient, setRecipient] = useState({});
      const [blockchain, setBlockchain] = useState(new BlockChain());
-     const [transaction, setTransaction] = useState({
-     });
-
-
+     const [transaction , setTransaction] = useState({  
+     }); 
+ 
      const handleChangesDate = async () => {
          const http = new HttpClient();
          const res = await await http.get('api/v1/blockchain')
@@ -26,16 +27,20 @@ import Recipient from "./Recipient";
          e.preventDefault()
          const lastBlock =  (blockchain[blockchain.length - 1] ) ;
       //  create new object(transaction)
-           
+         const newOrder = new Transaction(
+            amount,
+            sender,
+            recipient);  
           
       //const check = newOrder.getValidation()        
       //   if(check.validated) {
-      //console.log('newOrder', newOrder);
-      //  saveBlock(newOrder);
+      console.log('newOrder', newOrder);
+         saveTransaction(newOrder);
+         setTransaction(newOrder);
       //}
      };
-     async function saveBlock(obj) {
-        const url = 'localhost:5001/api/v1/blockchain/mine';
+     async function saveTransaction(obj) {
+        const url = 'http://localhost:5001/api/v1/transactions/transaction';
         const http = new HttpClient(url);
         await http.add(obj);
         // redirect
@@ -49,7 +54,7 @@ import Recipient from "./Recipient";
                  createOrder();}} >
          <div className = "val"
          onChange = {handleChangesDate} >
-         <Data updateAmount = {setAmount}/> 
+         <Amount updateAmount = {setAmount}/> 
          <Sender updateSender = {setSender} />   
          <Recipient updateRecipient = {setRecipient} />    
          </div> 
