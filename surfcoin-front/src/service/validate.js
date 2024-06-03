@@ -9,9 +9,9 @@ export const validateString = ( string ) =>  {
 }
 
 export const validateNum = ( num ) =>  {
-    if(typeof +num !== "number") 
+  if(typeof  num  ===   NaN || typeof num !== 'number' || typeof num ===  null || typeof num === 'undefined'||typeof  num === 'string'||typeof  num  ===   'NaN')
         return 'Amount is not a number...'
-    if(num < 1) 
-        return 'Amount has to be more than 0 ...'
+    if(num < 0.001) 
+        return 'Amount has to be more than 0.001 ...'
     else return true
 }
