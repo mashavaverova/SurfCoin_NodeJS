@@ -1,8 +1,6 @@
 import { useState} from "react";
-
- import BlockChain from "../../models/BlockchainClass";
- import Transaction from "../../models/Transaction";
- import HttpClient from "../../service/http";
+import Transaction from "../../models/Transaction";
+import HttpClient from "../../service/http";
 
 import Sender from "./Sender";
 import Recipient from "./Recipient";
@@ -17,15 +15,9 @@ import Error from "../Tools/Error";
      const [transaction , setTransaction] = useState({  new : Transaction }); 
  
  
-     const handleChangesDate = async () => {
-    //      const http = new HttpClient();
-    //      const res = await await http.get('api/v1/blockchain')
-    //      setBlockchain(res.data.chain)
-     };
     
      const createOrder = async (e) => {
-         e.preventDefault()
-        
+         e.preventDefault()        
       //  create new object(transaction)
      const newOrder = new Transaction(
             Number(amount),
@@ -62,14 +54,13 @@ import Error from "../Tools/Error";
          onSubmit = {(e) => {
                  e.preventDefault();
                  createOrder();}} >
-         <div className = "val"
-         onChange = {handleChangesDate} >
-  
+          
+         <div className = "val" >  
          <Amount updateAmount = {setAmount }/> 
          <Sender updateSender = {setSender} />   
          <Recipient updateRecipient = {setRecipient} />   
-
          </div> 
+          
          <h1 > Information that you adding to transaction </h1> 
          <div className = "data-container" >
          <p > amount :{JSON.stringify(amount)} </p> 
